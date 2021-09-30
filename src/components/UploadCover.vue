@@ -12,7 +12,7 @@
       /> -->
       <el-image
         v-if='cover'
-        style="max-width:300px"
+        style="max-width:200px"
         :src="cover"
         :preview-src-list="[cover]"
         :hide-on-click-modal='true'

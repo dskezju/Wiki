@@ -8,7 +8,7 @@
       <CustomSlider v-if="state.isShowSlider"></CustomSlider>
     </div>
     <ArrowUp></ArrowUp>
-    <Footer v-if="state.isShowNav"></Footer>
+    <Footer v-if="state.isShowSlider"></Footer>
   </div>
 </template>
 

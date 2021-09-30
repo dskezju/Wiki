@@ -8,7 +8,6 @@
           <!-- 标签 -->
           <template v-if="this.$route.params.type === 'tag'">
             <!-- 图片和tag名字 -->
-            <!-- <img class="me-ct-picture" :src="ct.cover?ct.cover:defaultAvatar"/> -->
             <el-image
               class="me-ct-picture"
               :src="ct.cover?ct.cover:defaultAvatar"
@@ -22,7 +21,6 @@
           <!-- 分类 -->
           <template v-else-if="this.$route.params.type === 'category'">
             <!-- 图片和category名字，以及description -->
-            <!-- <img class="me-ct-picture" :src="ct.cover?ct.cover:defaultAvatar"/> -->
             <el-image
               class="me-ct-picture"
               :src="ct.cover?ct.cover:defaultAvatar"
@@ -37,7 +35,6 @@
           <!-- 专栏 -->
           <template v-else>
             <!-- 名字，以及description -->
-            <!-- <img class="me-ct-picture" :src="ct.cover?ct.cover:defaultAvatar"/> -->
             <el-image
               class="me-ct-picture"
               :src="ct.cover?ct.cover:defaultAvatar"
@@ -65,9 +62,8 @@
                   {{this.followed ? '已关注' : '+ 关注'}}
                 </el-tag>
               </span>
-
-
             </h3>
+
             <!-- 标签 -->
             <div class="tags " title="标签">
               <el-tag
@@ -92,9 +88,9 @@
 
         <div class="me-ct-articles">
           <!-- 单页滚动展示文章，用v-if控制query未确定时不要展示文章 -->
-          <article-scroll-page
-            v-if="this.showArticle"
-            v-bind="article"
+          <article-and-wiki
+            v-if="this.show"
+            v-bind="params"
           />
         </div>
       </el-main>
@@ -109,36 +105,66 @@
   import {getCategoryDetail} from '@/api/category'
   import {getColumnById, getColumnDetail, removeColumnMember, addColumnMember, getColumnsByAuthor} from '@/api/column.js'
   import defaultAvatar from '@/assets/logo.jpg'
-  import ArticleScrollPage from '@/views/articles/ArticleScrollPage.vue'
-import { ElMain, ElMessage } from 'element-plus'
+  import { ElMain, ElMessage } from 'element-plus'
+  import ArticleAndWiki from '@/views/ArticleAndWiki.vue'
+  import {getQueryStringByName} from '@/utils/utils'
 
   export default {
     name: 'CategorizedArticles',
+    components: {
+      ArticleAndWiki,
+    },
     mounted() { //创建时获取category或tag
       this.getTypeAndArticles()
       console.log('in categorized')
     },
+
     watch: {
       '$route': 'getTypeAndArticles' //route变化时
     },
     data() {
       return {
-        showArticle: false, //一开始query还没确定，不要去找文章
+        show: false, //一开始query还没确定，不要去找文章
         defaultAvatar: defaultAvatar,
         ct: {},
-        article: {
-          query: { //查询articles
-            tagId: '',
-            categoryId: '',
-            columnId: '',
+        params: {
+          article: {
+            query: {
+              tagId: getQueryStringByName("tag_id"), //在url中找tag_id=...&中的 内容，即当前是不是正在显示某个tag内的文章
+              categoryId: getQueryStringByName("category_id"), //同上
+            },
+            page: { //页面情况及搜索文章限制
+              pageSize: 10, //每次获取5篇文章
+              pageNumber: 1, //当前的下一页是第几页
+              name: 'a.createDate', //根据创建日期，配合后端使用，因为后端的hql是 from Article a
+              sort: 'desc', //降序
+            },
           },
-          page: { //内页，因为是单页滚动，记录加载了多少页
-            pageSize: 5, //每次获取5篇文章
-            pageNumber: 1, //当前的下一页是第几页
-            name: 'a.createDate', //根据创建日期，配合后端使用，因为后端的hql是 from Article a
-            sort: 'desc' //降序
-          },
+          wiki: {
+            query: {
+              tagId: getQueryStringByName("tag_id"), //在url中找tag_id=...&中的 内容，即当前是不是正在显示某个tag内的文章
+            },
+            page: { //页面情况及搜索文章限制
+              pageSize: 5, //每次获取5篇文章
+              pageNumber: 1, //当前的下一页是第几页
+              name: 'a.createDate', //根据创建日期，配合后端使用，因为后端的hql是 from Article a
+              sort: 'desc', //降序
+            },
+          }
         },
+        // article: {
+        //   query: { //查询articles
+        //     tagId: '',
+        //     categoryId: '',
+        //     columnId: '',
+        //   },
+        //   page: { //内页，因为是单页滚动，记录加载了多少页
+        //     pageSize: 5, //每次获取5篇文章
+        //     pageNumber: 1, //当前的下一页是第几页
+        //     name: 'a.createDate', //根据创建日期，配合后端使用，因为后端的hql是 from Article a
+        //     sort: 'desc' //降序
+        //   },
+        // },
         // followed: false,
       }
     },
@@ -197,17 +223,20 @@ import { ElMain, ElMessage } from 'element-plus'
         let type = this.$route.params.type
         if ('tag' === type) { //根据type查询tag或category
           await this.getTagDetail(id)
-          this.article.query.tagId = id
-          this.showArticle = true
+          this.params.article.query.tagId = id
+          this.params.wiki.query.tagId = id
+          this.show = true
         } else if('category' === type) {
           await this.getCategoryDetail(id)
-          this.article.query.categoryId = id
-          this.showArticle = true
+          this.params.article.query.categoryId = id
+          this.params.wiki.query.categoryId = id
+          this.show = true
         }
         else if('column' === type){
-          this.article.query.columnId = id
+          this.params.article.query.columnId = id
+          this.params.wiki.query.columnId = id
           await this.getColumnDetail(id)
-          this.showArticle = true
+          this.show = true
         }
 
       },
@@ -241,7 +270,7 @@ import { ElMain, ElMessage } from 'element-plus'
           console.log(data)
 
           //获取column的tag，因为detail里获取不到tag，而这里面又获取不到文章数
-          data = await getColumnById(this.article.query.columnId)
+          data = await getColumnById(this.params.article.query.columnId)
           that.ct.tags = data.data.tags
           that.ct.members = data.data.members //忘了这个是很坑的
           console.log('ct:', that.ct)
@@ -251,9 +280,7 @@ import { ElMain, ElMessage } from 'element-plus'
         }
       },
     },
-    components: {
-      ArticleScrollPage
-    }
+
   }
 </script>
 

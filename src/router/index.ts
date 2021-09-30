@@ -60,7 +60,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "column",
         name: "column",
         component: () =>
-          import(/* webpackChunkName: "project" */ "@/views/Column.vue")
+          import(/* webpackChunkName: "project" */ "@/views/column/Columns.vue")
       },
       {
         path: "view/:id",
@@ -75,13 +75,18 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'edit/article/:id',
+        name: 'edit article',
+        component: () => import('@/views/articles/ArticleWrite.vue')
+      },
+      {
+        path: 'edit/wiki/:id',
         name: 'edit',
-        component: () => import('@/views/BlogWrite.vue')
+        component: () => import("@/views/WikiWrite.vue")
       },
       {
         path: 'edit/column/:id',
         name: 'editColumn',
-        component: () => import('@/views/ColumnWrite.vue')
+        component: () => import('@/views/column/ColumnWrite.vue')
       },
       {
         path: 'profile/:id',

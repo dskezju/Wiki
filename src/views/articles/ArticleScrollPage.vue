@@ -86,7 +86,6 @@
 </template>
 
 <script>
-  import ArticleItem from '@/components/article/ArticleItem.vue'
   import ScrollPage from '@/components/scrollpage/index.vue' //自定义的单页滚动组件
   import {getArticles} from '@/api/article'
   import {formatTime} from '@/utils/utils'
@@ -94,7 +93,6 @@
   export default {
     name: "ArticleScrollPage",
     components: {
-      ArticleItem,
       ScrollPage,
     },
     props: {
@@ -147,12 +145,12 @@
         },
         deep: true //监测query里每个元素的变化
       },
-      page: {
+      page: { //进来时居然没有触发这里
         handler() {
           this.noData = false
           this.articles = []
           this.innerPage = this.page
-          // console.log('page:', page)
+          console.log('page:', this.page)
           this.getArticles()
         },
         deep: true
@@ -165,6 +163,10 @@
     },
     mounted() { //创建时获取文章，不要用created，因为这时props还没传过来
       console.log('in mounted, this.query:', this.query)
+      if(this.page){ //刚进来没有触发watch，就只好手动赋值，而且必须copy，不然改变innerPage等价于改变this.page
+        this.innerPage = {...this.page}
+      }
+
       this.getArticles()
       //这里有坑，这里执行的是query第一次传过来的值，之后query改变后会发送新的请求，尽管articles被清空了
       //但新的请求的结果可能比旧的请求先到，于是后到的旧的请求的结果还是干扰了this.articles
@@ -204,15 +206,17 @@
         let that = this
         that.loading = true //设置loading为true，避免子组件里重复触发load事件
 
-        console.log('this.query:', this.query)
         // console.log('this.articles:', this.articles)
         //根据query中的查询条件，和当前加载了多少页的信息，向后端再加载innerPage.pageSize篇文章
         getArticles(that.query, that.innerPage).then(data => {
-          // console.log('that.query:', that.query)
+          console.log('that.page:', that.innerPage)
           let newArticles = data.data
+
           console.log('newArticles:', newArticles)
           if (newArticles && newArticles.length > 0) {
             that.innerPage.pageNumber += 1 //页数+1
+            //在里面filter，不然如果一页全是词条就会以为没有data了
+            newArticles = newArticles.filter((a) => {return a.state == 0})
             that.articles = that.articles.concat(newArticles) //新文章拼接在后面
           } else { //设置noData为true，表示没有更多数据了，在scrol-page里再怎么划也没用了
             that.noData = true

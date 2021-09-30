@@ -32,30 +32,26 @@
           </router-link>
         </el-col>
       </el-row>
-      <!-- <LoadingCustom v-if="state.isLoading"></LoadingCustom>
-      <LoadEnd v-if="state.isLoadEnd"></LoadEnd> -->
     </div>
+
   </scroll-page>
 </template>
 
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted, watch } from "vue";
-import LoadEnd from "../components/LoadEnd.vue";
-import LoadingCustom from "../components/Loading.vue";
+import LoadEnd from "@/components/LoadEnd.vue";
+import LoadingCustom from "@/components/Loading.vue";
 import {
-  getScrollTop,
-  getDocumentHeight,
-  getWindowHeight,
   timestampToTime,
   isMobileOrPc,
-} from "../utils/utils";
+} from "@/utils/utils";
 import { Params, ProjectList, ProjectsData } from "@/types/index";
 import {getColumns} from '@/api/column.js'
 import ScrollPage from '@/components/scrollpage/index.vue'
 
 export default defineComponent({
-  name: "ColumnPage",
+  name: "ColumnsPage",
   components: {
     LoadEnd,
     LoadingCustom,
@@ -160,7 +156,7 @@ export default defineComponent({
 .image {
   // position: relative;
   max-width: 400px;
-  max-height: 250px;
+  max-height: 200px;
   display: block; //让图片居中的方法
   margin: auto;
 }

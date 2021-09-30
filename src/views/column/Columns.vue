@@ -1,16 +1,16 @@
 <template>
-  <column-page v-bind='column'/>
+  <columns-page v-bind='column'/>
 </template>
 
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
-import ColumnPage from "./ColumnPage.vue";
+import ColumnsPage from "@/views/column/ColumnsPage.vue";
 
 export default defineComponent({
-  name: "Column",
+  name: "Columns",
   components: {
-    ColumnPage,
+    ColumnsPage,
   },
   data(){
     return {

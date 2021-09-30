@@ -15,15 +15,15 @@
       </el-tab-pane>
 
       <el-tab-pane label="知识卡片" name='2'>
-
+        <wiki-scroll-page v-bind="state.wiki"/>
       </el-tab-pane>
 
       <el-tab-pane label="专栏" name='3'>
         <column-page v-bind='state.column'/>
       </el-tab-pane>
 
-      <el-tab-pane label="待完成" name='4'>
-        待完成
+      <el-tab-pane label="背景展示" name='4'>
+        <skill-collect/>
       </el-tab-pane>
 
     </el-tabs>
@@ -37,14 +37,18 @@ import {useRoute, useRouter,} from 'vue-router'
 import {key} from '@/store'
 import ArticleScrollPage from '@/views/articles/ArticleScrollPage.vue'
 import { ElMessage } from 'element-plus'
-import ColumnPage from '@/views/ColumnPage.vue'
+import ColumnPage from '@/views/column/ColumnsPage.vue'
 import CardMe from '@/components/card/CardMe.vue'
+import WikiScrollPage from '@/views/WikiScrollPage.vue'
+import SkillCollect from '@/views/SkillCollect.vue'
 
 export default defineComponent({
   components: {
     ArticleScrollPage,
     ColumnPage,
     CardMe,
+    WikiScrollPage,
+    SkillCollect,
   },
   name: 'Profile',
   data(){
@@ -73,14 +77,25 @@ export default defineComponent({
       // is_current_user: false, //前端不用判断是不是当前用户了，因为后端会判断哪些数据是属于当前请求的用户的
       article: {
         query: {
-          year: '',
-          month: '',
           tagId: '',
           categoryId: '',
           authorId: route.params.id,
         },
         page: { //页面情况及搜索文章限制
           pageSize: 10, //每次获取5篇文章
+          pageNumber: 1, //当前的下一页是第几页
+          name: 'a.createDate', //根据创建日期，配合后端使用，因为后端的hql是 from Article a
+          sort: 'desc', //降序
+        },
+      },
+      wiki: {
+        query: {
+          tagId: '',
+          categoryId: '',
+          authorId: route.params.id,
+        },
+        page: { //页面情况及搜索文章限制
+          pageSize: 5, //每次获取5篇文章
           pageNumber: 1, //当前的下一页是第几页
           name: 'a.createDate', //根据创建日期，配合后端使用，因为后端的hql是 from Article a
           sort: 'desc', //降序

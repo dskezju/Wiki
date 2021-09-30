@@ -220,6 +220,9 @@ export default defineComponent({
       //获取文章详情，params是关于文章的类型
       const data: any = await viewArticle(route.params.id)
                                 .catch(() => {router.push('/')})
+      if(data.data.state != 0){
+        router.push('/')
+      }
       const comments: any = await getCommentsByArticle(route.params.id)
 
       state.isLoading = false;

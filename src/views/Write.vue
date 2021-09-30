@@ -6,11 +6,11 @@
       tab-position="top"
     >
       <el-tab-pane label="文章" name='1'>
-        <blog-write :key="key"/>
+        <article-write :key="key"/>
       </el-tab-pane>
 
       <el-tab-pane label="知识卡片" name='2'>
-
+        <wiki-write :key="key"/>
       </el-tab-pane>
 
       <el-tab-pane label="专栏" name='3'>
@@ -32,21 +32,21 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import BlogWrite from '@/views/BlogWrite.vue'
-import CardWrite from '@/views/CardWrite.vue'
+import ArticleWrite from '@/views/articles/ArticleWrite.vue'
 import {ElMessage} from 'element-plus'
 import AddTag from '@/views/AddTag.vue'
 import AddCategory from "@/views/AddCategory.vue";
-import AddColumn from "@/views/ColumnWrite.vue";
+import AddColumn from "@/views/column/ColumnWrite.vue";
+import WikiWrite from '@/views/WikiWrite.vue'
 
 export default defineComponent({
   name: 'Write',
   components: {
     AddColumn,
     AddCategory,
-    BlogWrite,
-    CardWrite,
+    ArticleWrite,
     AddTag,
+    WikiWrite,
   },
   data(){
     return {
