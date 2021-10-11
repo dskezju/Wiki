@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Home from "@/views/Home.vue";
 import Articles from '@/views/articles/Articles.vue'
 import {getToken, setToken} from '@/request/token'
 import {store} from '@/store'
@@ -25,11 +24,6 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/articles',
     children: [
       {
-        path: "home",
-        name: "Home",
-        component: Home,
-      },
-      {
         path: "articles",
         name: "articles",
         // route level code-splitting
@@ -43,12 +37,12 @@ const routes: Array<RouteRecordRaw> = [
         path: "archives",
         name: "archives",
         component: () =>
-          import(/* webpackChunkName: "archive" */ "@/views/Archives.vue")
+          import(/* webpackChunkName: "archive" */ "@/views/archive/Archives.vue")
       },
       {
         path: 'archive/:year/:month',
         name: 'archiveDetail',
-        component: () => import('@/views/ArchiveDetail.vue')
+        component: () => import('@/views/archive/ArchiveDetail.vue')
       },
       {
         path: "timeline",
@@ -71,32 +65,32 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: ':type/:id',
         name: 'type',
-        component: () => import('@/views/CategorizedArticles.vue')
+        component: () => import('@/views/CategorizedPage.vue')
       },
       {
         path: 'edit/article/:id',
         name: 'edit article',
-        component: () => import('@/views/articles/ArticleWrite.vue')
+        component: () => import('@/views/writting/ArticleWrite.vue')
       },
       {
         path: 'edit/wiki/:id',
         name: 'edit',
-        component: () => import("@/views/WikiWrite.vue")
+        component: () => import("@/views/writting/WikiWrite.vue")
       },
       {
         path: 'edit/column/:id',
         name: 'editColumn',
-        component: () => import('@/views/column/ColumnWrite.vue')
+        component: () => import('@/views/writting/ColumnWrite.vue')
       },
       {
         path: 'profile/:id',
         name: 'profile',
-        component: () => import('@/views/Profile.vue')
+        component: () => import('@/views/profile/Profile.vue')
       },
       {
         path: 'write',
-        name: 'write',
-        component: () => import('@/views/Write.vue')
+        name: 'writting',
+        component: () => import('@/views/writting/Write.vue')
       }
     ]
   },

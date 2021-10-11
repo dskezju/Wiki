@@ -26,6 +26,14 @@ export function getUserInfo() {
   })
 }
 
+export function updateUser(user) {
+  return request({
+    url: '/users/update',
+    method: 'post',
+    data: user
+  })
+}
+
 export function register(account, nickname, password) {
   const data = {
     account,

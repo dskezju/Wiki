@@ -3,7 +3,7 @@
 
     <card-me/>
 
-    <el-devider/>
+    <el-divider/>
 
     <el-tabs
       v-model="activeName"
@@ -22,8 +22,33 @@
         <column-page v-bind='state.column'/>
       </el-tab-pane>
 
-      <el-tab-pane label="背景展示" name='4'>
-        <skill-collect/>
+      <el-tab-pane label="科研背景" name='4'>
+
+        <show-user-graph/>
+
+        <el-collapse v-if='$route.params.id==$store.state.user.id' v-model='activeNames'>
+
+          <el-collapse-item title="添加技能" name="1">
+            <edit-skill :form='state.skillForm' @refresh='refresh'/>
+          </el-collapse-item>
+
+          <el-collapse-item title="添加成果" name="2">
+            <achievement-collect @refresh='refresh'/>
+          </el-collapse-item>
+
+          <el-collapse-item title="查看/编辑技能" name="3">
+            <!-- key用来强制刷新组件 -->
+            <show-skills :key='state.key'/>
+          </el-collapse-item>
+
+          <el-collapse-item title="查看/编辑成果" name="4">
+            <show-achievements
+              :achievements='state.achievements'
+              @refresh='refresh'
+            />
+          </el-collapse-item>
+
+        </el-collapse>
       </el-tab-pane>
 
     </el-tabs>
@@ -39,8 +64,13 @@ import ArticleScrollPage from '@/views/articles/ArticleScrollPage.vue'
 import { ElMessage } from 'element-plus'
 import ColumnPage from '@/views/column/ColumnsPage.vue'
 import CardMe from '@/components/card/CardMe.vue'
-import WikiScrollPage from '@/views/WikiScrollPage.vue'
-import SkillCollect from '@/views/SkillCollect.vue'
+import WikiScrollPage from '@/views/articles/wiki/WikiScrollPage.vue'
+import AchievementCollect from '@/views/achievement/AchievementCollect.vue'
+import ShowSkills from '@/views/profile/ShowSkills.vue'
+import ShowAchievements from '@/views/profile/ShowAchievements.vue'
+import {getAchievements} from '@/api/graph'
+import EditSkill from '@/views/EditSkill.vue'
+import ShowUserGraph from '@/views/profile/ShowUserGraph.vue'
 
 export default defineComponent({
   components: {
@@ -48,12 +78,17 @@ export default defineComponent({
     ColumnPage,
     CardMe,
     WikiScrollPage,
-    SkillCollect,
+    AchievementCollect,
+    ShowSkills,
+    ShowAchievements,
+    EditSkill,
+    ShowUserGraph,
   },
   name: 'Profile',
   data(){
     return {
-      activeName: '',
+      activeName: '', // tab
+      activeNames: ['1', '2', '3', '4'], // collapse item
     }
   },
   created(){
@@ -113,13 +148,67 @@ export default defineComponent({
           sort: 'desc' //降序
         }
       },
+      skillForm: {
+        id: '',
+        label: '',
+        achievements: [],
+        properties: {
+          title: '',
+          summary: '',
+          link: '',
+          note: '',
+          time: '', //完成时间
+        }
+      },
+      achievements: [],
+      key: 0,
 
     })
+
+    const getPersonalAchievements = async () => {
+      const data = await getAchievements(store.state.user.id)
+                          .catch(err=>console.log('err:', err)) as any
+      console.log(data)
+      const achievements = data.data
+      if(!achievements)
+        return
+      achievements.forEach((achieve) => {
+        if(achieve.childrenNodes){
+          achieve.imgs = achieve.childrenNodes.filter((item) => {
+            return item.label == 'image'
+          })
+          achieve.videos = achieve.childrenNodes.filter((item) => {
+            return item.label == 'video'
+          })
+          achieve.domains = achieve.childrenNodes.filter((item) => {
+            return item.label == 'domain'
+          })
+          delete achieve.childrenNodes
+        }
+        else {
+          achieve.imgs = []
+          achieve.videos = []
+          achieve.domains = []
+        }
+
+        achieve.editMode = false
+      })
+      achievements.sort(function(a,b){
+        console.log(new Date(a.properties.create_time))
+        console.log(new Date(b.properties.create_time))
+        console.log(new Date(a.properties.create_time)< new Date(b.properties.create_time))
+        return new Date(a.properties.create_time)< new Date(b.properties.create_time)})
+      console.log('achievements:', achievements)
+      state.achievements = achievements
+    }
+
+
 
     onMounted(async () => {
       store.dispatch('getUserInfo')
         .then(() => {
           console.log('user:', store.state.user)
+          getPersonalAchievements()
         })
         .catch(res => {
           console.log(res)
@@ -133,8 +222,28 @@ export default defineComponent({
       return;
     })
 
+    const refresh = () => {
+      getPersonalAchievements()
+
+      state.key++ //用来强制刷新组件
+
+      state.skillForm = {
+        id: '',
+        label: '',
+        achievements: [],
+        properties: {
+          title: '',
+          summary: '',
+          link: '',
+          note: '',
+          time: '', //完成时间
+        }
+      }
+    }
+
     return {
       state,
+      refresh,
     }
   }
 })

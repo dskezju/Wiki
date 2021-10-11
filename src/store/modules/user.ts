@@ -8,6 +8,13 @@ const user = {
     account: '',
     name: '',
     avatar: '',
+    phone: '',
+    email: '',
+    github: '',
+    place: '',
+    address: '',
+    birth: '',
+    gender: '',
     token: getToken(),
   },
   mutations: {
@@ -31,6 +38,27 @@ const user = {
     },
     SET_ID: (state, id) => {
       state.id = id
+    },
+    SET_PHONE: (state, phone) => {
+      state.phone = phone
+    },
+    SET_EMAIL: (state, email) => {
+      state.email = email
+    },
+    SET_GITHUB: (state, github) => {
+      state.github = github
+    },
+    SET_PLACE: (state, place) => {
+      state.place = place
+    },
+    SET_ADDRESS: (state, address) => {
+      state.address = address
+    },
+    SET_BIRTH: (state, birth) => {
+      state.birth = birth
+    },
+    SET_GENDER: (state, gender) => {
+      state.gender = gender
     }
   },
   actions: {
@@ -59,9 +87,15 @@ const user = {
           commit('SET_NAME', data.data.name)
           commit('SET_AVATAR', data.data.avatar)
           commit('SET_ID', data.data.id)
+          commit('SET_PHONE', data.data.phone)
+          commit('SET_EMAIL', data.data.email)
+          commit('SET_GITHUB', data.data.github)
+          commit('SET_PLACE', data.data.place)
+          commit('SET_ADDRESS', data.data.address)
+          commit('SET_BIRTH', data.data.birth)
+          commit('SET_GENDER', data.data.gender)
           resolve(data)
-        }).catch(error => { //失败就删除所有信息
-          commit('SET_TOKEN', '')
+        }).catch(error => { //失败就删除信息
           commit('SET_ACCOUNT', '')
           commit('SET_NAME', '')
           commit('SET_AVATAR', '')

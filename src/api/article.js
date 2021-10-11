@@ -91,13 +91,14 @@ export async function listArchiveArticles(page){
       sort: page.sort,
     }
   }) //.catch(()=>{}) //当用.catch时，哪怕出错了后面的代码也会执行，如果没有.catch，后面的代码就不会执行，直接进入外部的catch
-
-  data.data.forEach(article => { //添加year和month属性
+  if(data.data){
+    data.data.forEach(article => { //添加year和month属性
       const date = new Date(article.createDate)
       article.year = date.getFullYear()
       article.month = date.getMonth() + 1 //month从0开始算
     })
-    return data
+  }
+  return data
 }
 
 export function getArticleById(id) { //获取文章，不增加阅读数

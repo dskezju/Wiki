@@ -8,7 +8,7 @@
 import {
   getQueryStringByName,
 } from "@/utils/utils";
-import ArticleAndWiki from '@/views/ArticleAndWiki.vue'
+import ArticleAndWiki from '@/views/articles/ArticleAndWiki.vue'
 
 export default {
   name: "Articles",
