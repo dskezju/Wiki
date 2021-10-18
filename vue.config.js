@@ -31,6 +31,8 @@ module.exports = {
   devServer: {
     open: false,
     port: 8008, // 自定义修改8080端口
+    //https://stackoverflow.com/questions/43619644/i-am-getting-an-invalid-host-header-message-when-connecting-to-webpack-dev-ser
+    disableHostCheck: true,   // That solved it
   },
   chainWebpack(config) {
     // set svg-sprite-loader
