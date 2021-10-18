@@ -80,7 +80,6 @@
               </el-button>
               <el-button
                 size="small"
-                disabled
                 type="danger"
                 @click="handleClick('register')"
               >

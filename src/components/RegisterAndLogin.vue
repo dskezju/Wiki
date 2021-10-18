@@ -40,7 +40,7 @@
         </el-formItem>
 
         <!-- 根据handleFlag来决定要不要显示注册的表单部分 -->
-        <!-- <el-formItem
+        <el-formItem
           v-if="handleFlag === 'register'"
           label="昵称"
           :label-width="state.formLabelWidth"
@@ -72,7 +72,7 @@
             placeholder="个人简介"
             autocomplete="off"
           ></el-input>
-        </el-formItem> -->
+        </el-formItem>
       </el-form>
       <div
         slot="footer"
@@ -134,10 +134,28 @@ export default defineComponent({
       this.$refs.form.validate( async (valid) => {
         if (valid) {
           this.state.btnLoading = true;
-          if (this.state.handleFlag === "register") {
-            // data = await register(this.state.params);
+          console.log(this.handleFlag)
+          if (this.handleFlag === "register") {            
+            try {
+              await this.$store.dispatch('register', this.state.params)
+              await this.$store.dispatch('getUserInfo')
+                      .catch(err => console.log(err))
+              this.$emit("ok", false);
+              ElMessage({
+                message: "register success!",
+                type: "success",
+              });
+            }
+            catch {
+              ElMessage({
+                type: 'error',
+                message: '注册失败',
+              })
+            }
+            this.state.btnLoading = false;
           }
           else {
+            // login
             try {
               await this.$store.dispatch('login', this.state.params)
               await this.$store.dispatch('getUserInfo') //login只会setToken
