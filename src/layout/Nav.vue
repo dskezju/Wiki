@@ -196,17 +196,17 @@ import { isMobileOrPc, getQueryStringByName } from "@/utils/utils";
 import { UserInfo, NavListItem } from "@/types/index";
 import {getUserInfo} from '@/api/login'
 
-export default defineComponent({
+export default defineComponent({ //defineComponent最重要的是：在TypeScript下，正确推断 setup() 组件的参数类型
   name: "Nav",
   components: {
     RegisterAndLogin: defineAsyncComponent(
       () => import("@/components/RegisterAndLogin.vue")
     ),
     Logo: defineAsyncComponent(
-      () => import("@/components/Logo.vue")
+      () => import("@/components/logo/Logo.vue")
     ),
     Avatar: defineAsyncComponent(
-      () => import('@/components/Avatar.vue')
+      () => import('@/components/common/Avatar.vue')
     )
   },
   computed: {

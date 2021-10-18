@@ -26,7 +26,15 @@ export function getUserInfo() {
   })
 }
 
-export function register(account, name, password) {
+export function updateUser(user) {
+  return request({
+    url: '/users/update',
+    method: 'post',
+    data: user
+  })
+}
+
+export function register(account, nickname, password) {
   const data = {
     account,
     name,

@@ -17,7 +17,6 @@
           :key="article.id"
           class="item"
         >
-
           <img
             class="wrap-img img-blur-done"
             :src="article.cover ? article.cover : require('@/assets/article_avatar.jpg')"

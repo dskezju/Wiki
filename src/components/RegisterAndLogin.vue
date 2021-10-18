@@ -108,7 +108,7 @@ import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 import { key } from '../store'
-import config from "../utils/config";
+// import config from "../utils/config";
 import { RegAndLogParams, UserInfo } from "../types/index";
 import {register, login} from '@/api/login'
 

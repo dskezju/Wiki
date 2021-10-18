@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import LoadingCustom from  '@/components/Loading.vue'
-import LoadEnd from '@/components/LoadEnd.vue'
+import LoadingCustom from  '@/components/common/Loading.vue'
+import LoadEnd from '@/components/common/LoadEnd.vue'
 
 export default {
   name: "ScrollPage",

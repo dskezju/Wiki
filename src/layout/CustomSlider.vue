@@ -2,14 +2,14 @@
   <div class="right slider">
     <img
       class="right-logo"
-      :src="avatar"
+      :src="$store.state.user.avatar"
       alt=""
     >
     <div class="title">{{account}}</div>
     <div class="right-content">
     </div>
     <div class="tags">
-      <div class="title">标签云</div>
+      <div class="title">标签</div>
       <!--点击进入相应标签的文章页-->
       <router-link
         v-for="tag in hotTags"

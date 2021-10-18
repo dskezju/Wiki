@@ -26,8 +26,8 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
-import LoadEnd from "@/components/LoadEnd.vue";
-import LoadingCustom from "@/components/Loading.vue";
+import LoadEnd from "@/components/common/LoadEnd.vue";
+import LoadingCustom from "@/components/common/Loading.vue";
 import {
   getScrollTop,
   getDocumentHeight,
@@ -52,6 +52,18 @@ export default defineComponent({
       isLoading: false,
       list: [
         {
+          id: 3,
+          state: 0,
+          title: '',
+          content:
+            `<div>
+              增加个人技能与成果等信息收集表单，用<a href='http://relation-graph.com/#/demo/simple'>relation graph</a>可视化，
+              目前样式上有待调整
+          </div>`,
+          start_time: '2021.9.7 08:00:00',
+          end_time: '2021.10.11 08:00:00'
+        },
+        {
           id: 2,
           state: 0,
           title: '初版',
@@ -62,7 +74,7 @@ export default defineComponent({
               增加写文章、知识卡片、创建专栏、显示个人页面功能，目前显示文章目录还有一些问题。
           </div>`,
           start_time: '2021.7.30 08:00:00',
-          end_time: '2021.8.15 08:00:00'
+          end_time: '2021.9.6 08:00:00'
         },
         {
           id: 1,

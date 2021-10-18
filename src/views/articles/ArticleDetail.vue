@@ -82,12 +82,12 @@
 
         <!-- 文章，直接用渲染好的html放上去 -->
         <div class="content">
-          <!-- <div
+          <div
             id="content"
             class="article-detail"
-            v-html="state.articleDetail.content"
           >
-          </div> -->
+            <strong>摘要：{{state.articleDetail.summary}}</strong>
+          </div>
           <markdown-editor :editor="state.editor"/>
         </div>
 
@@ -150,14 +150,14 @@ import {useStore} from 'vuex'
 import {key} from "@/store"
 import { timestampToTime, isMobileOrPc } from "@/utils/utils";
 import markdown from "@/utils/markdown";
-import LoadingCustom from "@/components/Loading.vue";
-import CommentList from "@/components/CommentList.vue";
+import LoadingCustom from "@/components/common/Loading.vue";
+import CommentList from "@/components/comment/CommentList.vue";
 import {
   ArticleDetailIF,
 } from "@/types";
 import {viewArticle, updateArticleLikes} from '@/api/article'
 import {getCommentsByArticle, publishComment} from '@/api/comment'
-import Avatar from '@/components/Avatar.vue'
+import Avatar from '@/components/common/Avatar.vue'
 import MarkdownEditor from '@/components/markdown/MarkdownEditor.vue'
 
 declare let document: Document | any;
