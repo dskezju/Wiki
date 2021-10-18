@@ -6,7 +6,7 @@ function resolve (dir) {
 
 let login_url = 'http://localhost:8000/login',
     back_url = 'http://localhost:8080',
-    base_url = 'http://192.168.56.2:8003'
+    base_url = 'http://www.dskezju.test:8003'
 
 process.env.VUE_APP_LOGIN_URL = login_url + '?redirect=' + base_url
 process.env.VUE_APP_BACK_URL = back_url
