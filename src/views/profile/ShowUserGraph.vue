@@ -1,8 +1,8 @@
 <template>
-  <div v-if='graph'>
-    <el-button type='primary' plain @click='visible=!visible'>查看个人图谱</el-button>
+  <div>
+    <el-button type='primary' plain @click='click'>查看个人图谱</el-button>
     <el-dialog width="80%" custom-class="me-dialog" v-model="visible">
-      <relation-graph :graph="graph"/>
+      <relation-graph :key="key" :graph="graph"/>
     </el-dialog>
   </div>
 </template>
@@ -19,14 +19,19 @@ export default {
   data(){
     return{
       visible: false,
+      key: 0, //用来强制刷新
       graph: '', //还不能写成graph: {},否则就会把graph传给子组件，因为!{}=false
     }
   },
-  async created(){
-    const data = await getUserGraph(this.$store.state.user.id)
-    this.graph = data.data
-    console.log('this.graph:', data.data)
-  },
+  methods: {
+    async click(){
+      const data = await getUserGraph(this.$store.state.user.id)
+      this.graph = data.data
+      this.key++
+      console.log('this.graph:', data.data)
+      this.visible = !this.visible
+    }
+  }
 }
 </script>
 

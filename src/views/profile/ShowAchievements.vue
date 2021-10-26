@@ -63,6 +63,7 @@ export default {
       this.$emit('refresh') //重新获取achievements，不然这些新增的imgs还是没有id
     },
     deleteAchievement(index) {
+      console.log('this.achieve[index]:', this.achievements[index])
       if(this.achievements[index].id){
         deleteAchievement(this.achievements[index].id)
       }
