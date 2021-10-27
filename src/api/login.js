@@ -34,15 +34,10 @@ export function updateUser(user) {
   })
 }
 
-export function register(account, nickname, password) {
-  const data = {
-    account,
-    name,
-    password
-  }
+export function register(user) {
   return request({
     url: '/register',
     method: 'post',
-    data
+    data: user,
   })
 }

@@ -146,7 +146,7 @@ export default {
     //添加事件
     window.addEventListener('scroll', this.editorToolBarToFixedWrapper, false);
   },
-  beforeUnmount() { //移除事件，vue3中beforeUnmounted改成了beforeUnmont
+  beforeUnmount() { //移除事件，vue3中beforeUnmounted改成了beforeUnmount
     window.removeEventListener('scroll', this.editorToolBarToFixedWrapper, false)
     console.log('removed')
   },
@@ -229,7 +229,7 @@ export default {
       console.log('form:', that.articleForm)
       that.articleForm.editor.value = article.body.content
 
-      let tags = this.articleForm.tags.map(function (item) {
+      let tags = this.articleForm.tags.map((item) => {
         return item.id;
       })
       this.articleForm.tags = tags

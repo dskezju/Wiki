@@ -1,4 +1,4 @@
-import {saveAchievement} from '@/api/graph'
+import {saveAchievement, removeDomain} from '@/api/graph'
 import { ElMessage } from 'element-plus'
 
 export function deal_media(graph, media, label, edge_label, achieve_id, fake_id){
@@ -31,9 +31,11 @@ export function deal_media(graph, media, label, edge_label, achieve_id, fake_id)
   return fake_id
 }
 
-export function add_achievement(graph, achieve, fake_id, isNew, i){
+// domains必须是id的集合
+export function add_achievement(graph, achieve, fake_id, isNew, i, domains){
+  let achieve_id = isNew ? ++fake_id : achieve.id
   graph.nodes.push({ //成果节点
-    id: isNew ? ++fake_id : achieve.id,
+    id: achieve_id,
     isNew: isNew,
     label: 'achievement',
     properties: {
@@ -41,6 +43,16 @@ export function add_achievement(graph, achieve, fake_id, isNew, i){
       create_time: new Date(), //成果的顺序
     },
   })
+  for(let domain_id of domains){ // achievement -> domain
+    graph.edges.push({ //可以这样因为后台规定两个节点间一个type的edge只能有一条
+      startNodeId: achieve_id,
+      endNodeId: domain_id,
+      label: 'achievement_domain',
+      properties: {
+        name: 'achievement_domain',
+      }
+    })
+  }
   return fake_id
 }
 
@@ -59,7 +71,14 @@ export async function submit_achievements(achievements){
         return
       }
 
-      fake_id = add_achievement(graph, achieve, fake_id, achieve.id ? false : true, i)
+      for(let domain_id of achieve.ori_domains){ //比较不同，放弃的domain就移除
+        if(achieve.domains.indexOf(domain_id) === -1){
+          removeDomain(achieve.id, domain_id) //如果ori_domains不为空，则一定不是新的achievement
+        }
+      }
+
+      //这里achieve的domains就是achieve.domains，因为在achievementFormItem里是直接修改achieve.domains
+      fake_id = add_achievement(graph, achieve, fake_id, achieve.id ? false : true, i, achieve.domains)
       //处理图片和视频，单独成节点
       let achieve_id = achieve.id || fake_id
       fake_id = deal_media(graph, achieve.imgs, 'image', 'achievement_image', achieve_id, fake_id)

@@ -161,7 +161,7 @@
       }
     },
     mounted() { //创建时获取文章，不要用created，因为这时props还没传过来
-      console.log('in mounted, this.query:', this.query)
+      // console.log('in mounted, this.query:', this.query)
       if(this.page){ //刚进来没有触发watch，就只好手动赋值，而且必须copy，不然改变innerPage等价于改变this.page
         this.innerPage = {...this.page}
       }
@@ -208,10 +208,10 @@
         // console.log('this.articles:', this.articles)
         //根据query中的查询条件，和当前加载了多少页的信息，向后端再加载innerPage.pageSize篇文章
         getArticles(that.query, that.innerPage).then(data => {
-          console.log('that.page:', that.innerPage)
+          // console.log('that.page:', that.innerPage)
           let newArticles = data.data
 
-          console.log('newArticles:', newArticles)
+          // console.log('newArticles:', newArticles)
           if (newArticles && newArticles.length > 0) {
             that.innerPage.pageNumber += 1 //页数+1
             //在里面filter，不然如果一页全是词条就会以为没有data了

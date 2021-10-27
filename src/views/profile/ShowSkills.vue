@@ -51,18 +51,34 @@ export default {
     async getPersonalSkills(){
       const data = await getSkills(this.$store.state.user.id)
       const skills = data.data
-      console.log('skills:', data.data)
+      // console.log('skills:', data.data)
       if(!skills)
         return
       skills.forEach((skill) => {
-        console.log(skill.childrenNodes)
-        skill.achievements = skill.childrenNodes
+        // console.log(skill.childrenNodes)
+        if(skill.childrenNodes){
+          skill.domains = skill.childrenNodes.filter((item) => {
+            return item.label == 'domain'
+          })
+          // skill.domains.forEach((item) => item.id) //抽风了
+          skill.domains = skill.domains.map((item) => item.id) //只需要留id就行
+
+          skill.achievements = skill.childrenNodes.filter((item) => {
+            return item.label == 'achievement'
+          })
+        }
+        else{
+          skill.domains = []
+        }
+        // console.log('domains:', skill.domains)
+        skill.ori_domains = skill.domains.slice() //备份，因为domains会被更改
+
         delete skill.childrenNodes
-        console.log(skill.achievements)
+        console.log('domains:', skill.domains)
 
         if(skill.achievements){
           skill.achievements.forEach((achieve) => {
-            console.log('achieve', achieve)
+            // console.log('achieve', achieve)
             if(achieve.childrenNodes){
               achieve.imgs = achieve.childrenNodes.filter((item) => {
                 return item.label == 'image'
@@ -73,24 +89,24 @@ export default {
               achieve.domains = achieve.childrenNodes.filter((item) => {
                 return item.label == 'domain'
               })
+              //不知道为什么forEach又抽风了
+              achieve.domains = achieve.domains.map((item) => item.id) //只需要留id就行
             }
             else{
               achieve.imgs = []
               achieve.videos = []
               achieve.domains = []
             }
+            achieve.ori_domains = achieve.domains.slice() //备份，用来比较更改
 
             delete achieve.childrenNodes
-
             achieve.editMode = false
           })
         }
         else{
           skill.achievements = []
         }
-
         skill.editMode = false
-
       })
       console.log('skills:', skills)
       this.skills = skills

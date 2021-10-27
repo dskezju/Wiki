@@ -99,3 +99,17 @@ export function getNodeEdgeTypes(){
     method: 'get',
   })
 }
+
+export function getAllDomains(){
+  return request({
+    url: '/graph/domains/all',
+    method: 'get',
+  })
+}
+
+export function removeDomain(source_id, domain_id){
+  return request({
+    url: `/graph/domains/remove/${source_id}/${domain_id}`,
+    method: 'post',
+  })
+}

@@ -38,14 +38,14 @@ export default {
       required: true,
     }
   },
-  // watch: {
-  //   achievements: {
-  //     handler(old, newval){
-  //       console.log('achieves:', newval)
-  //     },
-  //     deep: true,
-  //   }
-  // },
+  watch: {
+    achievements: {
+      handler(old, newval){
+        console.log('in achieveForm, achieves:', newval)
+      },
+      deep: true,
+    }
+  },
   methods: {
     deleteAchievement(index) {
       if(this.achievements[index].id){
@@ -82,6 +82,10 @@ export default {
       }
       this.achievements[index].videos.splice(video_idx, 1)
       console.log('videos:', this.achievements[index].videos)
+    },
+    changeDomains(index, newDomains) { //直接修改achievement.domains
+      console.log('newDomains:', newDomains)
+      this.achievements[index].domains = newDomains
     }
   }
 }

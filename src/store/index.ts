@@ -1,6 +1,7 @@
 import { InjectionKey } from 'vue'
 import { createStore, Store } from 'vuex'
 import user from "./modules/user";
+import graph from './modules/graph'
 
 export interface State {
   count: number,
@@ -14,7 +15,8 @@ export const store = createStore<State>({ //原本的new Vuex.store({})
     count: 0
   },
   modules: {
-    user
+    user,
+    graph,
   },
   mutations: {
     increment(state) {

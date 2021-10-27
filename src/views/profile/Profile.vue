@@ -24,12 +24,12 @@
 
       <el-tab-pane label="科研背景" name='4'>
 
-        <show-user-graph/>
+        <show-user-graph :key="state.key"/>
 
         <el-collapse v-if='$route.params.id==$store.state.user.id' v-model='activeNames'>
 
           <el-collapse-item title="添加技能" name="1">
-            <edit-skill :form='state.skillForm' @refresh='refresh'/>
+            <edit-skill :key="state.key" :form='state.skillForm' @refresh='refresh'/>
           </el-collapse-item>
 
           <el-collapse-item title="添加成果" name="2">
@@ -55,7 +55,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import {defineComponent, onMounted, reactive} from 'vue'
 import {useStore} from 'vuex'
 import {useRoute, useRouter,} from 'vue-router'
@@ -91,10 +91,13 @@ export default defineComponent({
       activeNames: ['3', '4'], // collapse item
     }
   },
-  created(){
+  async created(){
     if(localStorage.getItem('profile-tab')){ //获取上一次打开的tab
       this.activeName = localStorage.getItem('profile-tab')
     }
+    await this.$store.dispatch('getDomains')
+    console.log('$store.state.graph.domains:', this.$store.state.graph.domains)
+    console.log('domain2name:', this.$store.state.graph.domain2name)
   },
   methods: {
     handleClick(tab){
@@ -158,7 +161,9 @@ export default defineComponent({
           link: '',
           note: '',
           time: '', //完成时间
-        }
+        },
+        domains: [],
+        ori_domains: [],
       },
       achievements: [],
       key: 0,
@@ -167,7 +172,7 @@ export default defineComponent({
 
     const getPersonalAchievements = async () => {
       const data = await getAchievements(store.state.user.id)
-                          .catch(err=>console.log('err:', err)) as any
+                          .catch(err=>console.log('err:', err))
       console.log(data)
       const achievements = data.data
       if(!achievements)
@@ -183,6 +188,9 @@ export default defineComponent({
           achieve.domains = achieve.childrenNodes.filter((item) => {
             return item.label == 'domain'
           })
+          // achieve.domains.forEach((item) => item.id) //抽风
+          achieve.domains = achieve.domains.map((item) => item.id)
+
           delete achieve.childrenNodes
         }
         else {
@@ -190,7 +198,7 @@ export default defineComponent({
           achieve.videos = []
           achieve.domains = []
         }
-
+        achieve.ori_domains = achieve.domains.slice()
         achieve.editMode = false
       })
       achievements.sort(function(a,b){
@@ -201,8 +209,6 @@ export default defineComponent({
       console.log('achievements:', achievements)
       state.achievements = achievements
     }
-
-
 
     onMounted(async () => {
       store.dispatch('getUserInfo')
@@ -224,9 +230,6 @@ export default defineComponent({
 
     const refresh = () => {
       getPersonalAchievements()
-
-      state.key++ //用来强制刷新组件
-
       state.skillForm = {
         id: '',
         label: '',
@@ -237,8 +240,12 @@ export default defineComponent({
           link: '',
           note: '',
           time: '', //完成时间
-        }
+        },
+        domains: [],
+        ori_domains: [],
       }
+
+      state.key++ //用来强制刷新组件
     }
 
     return {

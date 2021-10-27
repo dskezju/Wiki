@@ -142,9 +142,20 @@ const user = {
     },
     register({commit}, user) { //注册，后端创建用户后自动登录，返回token
       return new Promise((resolve, reject) => {
-        register(user.account, user.name, user.password).then((data) => {
+        register(user).then((data) => {
           commit('SET_TOKEN', data.data['Oauth-Token'])
           setToken(data.data['Oauth-Token'])
+
+          commit('SET_NAME', data.data.name)
+          commit('SET_AVATAR', data.data.avatar)
+          commit('SET_ID', data.data.id)
+          commit('SET_PHONE', data.data.phone)
+          commit('SET_EMAIL', data.data.email)
+          commit('SET_GITHUB', data.data.github)
+          commit('SET_PLACE', data.data.place)
+          commit('SET_ADDRESS', data.data.address)
+          commit('SET_BIRTH', data.data.birth)
+          commit('SET_GENDER', data.data.gender)
           resolve("")
         }).catch((error) => { //内层的register出错了就会来catch，此时调用外层register的reject
           reject(error)

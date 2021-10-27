@@ -32,6 +32,15 @@
 
           <el-descriptions-item>
             <template #label>
+              领域
+            </template>
+            <el-tag style='margin-right:5px;' v-for='id in skill.domains' :key="id">
+              {{this.$store.state.graph.domain2name[id]}}
+            </el-tag>
+          </el-descriptions-item>
+
+          <el-descriptions-item>
+            <template #label>
               链接
             </template>
             <a :href='skill.properties.link'>
@@ -105,6 +114,8 @@ export default {
   },
   mounted(){
     console.log('skill:', this.skill)
+    console.log(this.$store.state.graph.domain2name)
+    console.log(this.$store.state.graph.domain2name[83])
   },
   methods: {
     clickChange(){

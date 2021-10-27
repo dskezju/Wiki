@@ -26,6 +26,15 @@
 
           <el-descriptions-item>
             <template #label>
+              领域
+            </template>
+            <el-tag style='margin-right:5px;' v-for='id in achieve.domains' :key="id">
+              {{$store.state.graph.domain2name[id]}}
+            </el-tag>
+          </el-descriptions-item>
+
+          <el-descriptions-item>
+            <template #label>
               摘要
             </template>
               {{achieve.properties.summary}}

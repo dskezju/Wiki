@@ -14,6 +14,7 @@
           <el-radio-button v-for='(label, i) in node_labels' :key="i" :label="label">{{label}}</el-radio-button>
         </el-radio-group>
       </div>
+
       <div>
         <div style="line-height: 20px;">关系筛选：</div>
         <el-checkbox-group v-model="rel_checkList" @change="doFilter">
@@ -21,6 +22,7 @@
         </el-checkbox-group>
       </div>
     </div>
+
     <div ref="myPage" style="height:calc(100vh - 50px);" @click="close">
       <seeks-relation-graph
         ref='seeksRelationGraph'
@@ -40,7 +42,7 @@
             <div v-if='node.data.label=="image"'>
               <el-image style='width:60px;height:50px' :src='node.data.url' fit="cover" :preview-src-list="[node.data.url]"/>
             </div>
-            <span v-else style="font-size: 15px;">
+            <span v-else style="font-size: 14px;">
               {{ node.data.text }}
             </span>
           </div>
@@ -108,7 +110,7 @@ export default {
         // disableDragNode: false, //是否禁用图谱中节点的拖动
         // moveToCenterWhenResize: true, //当图谱的大小发生变化时，是否重新让图谱的内容看起来居中
         // allowShowZoomMenu: true, //是否在右侧菜单栏显示放大缩小的按钮，此设置和disableZoom不冲突
-        isMoveByParentNode: true, //是否在拖动节点后让子节点跟随
+        // isMoveByParentNode: true, //是否在拖动节点后让子节点跟随
         // hideNodeContentByZoom: false, //是否根据缩放比例隐藏节点内容
         // defaultNodeShape: 0, //默认的节点形状，0:圆形；1:矩形
         // defaultNodeFontColor: 'white', //默认的节点文字颜色
@@ -210,8 +212,8 @@ export default {
     },
     showGraph(query){
       console.log('graph: ', this.graph)
-      // if(!this.graph)
-      //   return
+      if(!this.graph || !this.graph.nodes || !this.graph.nodes.length)
+        return
       var __graph_json_data = {
         rootId: '',
         nodes: [],
@@ -273,6 +275,9 @@ export default {
 
             // 不能使用外部组件，也没法注入事件
             item.html = `<img style='width:70px;height:70px;object-fit:cover' src=${node.properties.url}/>`
+          }
+          else if(node.label == 'domain'){
+            item.data.text = node.properties.name
           }
           else{
             item.data.text = node.label

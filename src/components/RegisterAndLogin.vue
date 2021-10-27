@@ -135,8 +135,9 @@ export default defineComponent({
         if (valid) {
           this.state.btnLoading = true;
           console.log(this.handleFlag)
-          if (this.handleFlag === "register") {            
+          if (this.handleFlag === "register") {
             try {
+              console.log('in register, user=', this.state.params)
               await this.$store.dispatch('register', this.state.params)
               await this.$store.dispatch('getUserInfo')
                       .catch(err => console.log(err))

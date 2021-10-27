@@ -2,7 +2,7 @@ import request from '@/request'
 
 
 export function getArticles(query, page) {
-  console.log('in js, query:', query)
+  // console.log('in js, query:', query)
   return request({
     url: '/articles',
     method: 'get',

@@ -152,7 +152,7 @@
         let that = this
         that.loading = true //设置loading为true，避免子组件里重复触发load事件
 
-        console.log('this.query:', this.query)
+        // console.log('this.query:', this.query)
         //根据query中的查询条件，和当前加载了多少页的信息，向后端再加载innerPage.pageSize篇文章
         getArticles(that.query, that.innerPage).then(data => {
           let newArticles = data.data
